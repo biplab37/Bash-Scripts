@@ -1,0 +1,61 @@
+#!/usr/bin/zsh
+
+set -eu
+
+usage() {
+    echo "Usage: makeslide1 [-t THEME] [-h] [-o] filenames \n  This function creates a reveal.js slide from a makdown files and open it in firefox."
+}
+
+while getopts ":ht:o" opt; do
+	case "$opt" in
+		t)
+			THEME="$OPTARG"
+			;;
+		h)
+			usage
+			exit 1
+			;;
+		o) 
+			echo "Option for theme:"
+			echo "  beige\n  blood\n  league\n  night\n  simple\n  solarized\n  black\n  moon\n  serif\n  sky\n  white"
+			exit 1
+			;;
+		\?)
+			echo "invalid option: -$OPTARG"
+			exit 1
+			;;
+		:)
+			echo "Option -$OPTARG requires an argument."
+			exit 1
+			;;
+	esac
+done
+shift "(${OPTIND} - 1)"
+
+if [ -z $* ]; then
+	echo "Please provide the markdown files you want to be converted to sildes"
+fi
+
+for file in $* ; do
+	# Separate the name from the extension
+	FILENAME=${file%.*}
+
+	# Copy an existing template file to the current folder
+	cp ~/.myfunctions/assets/markdown.html $FILENAME.html
+
+	# Remove the YAML front matter from the markdown file if it exists
+	sed '1 { /^---/ { :a N; /\n---/! ba; d} }' $FILENAME.md > buffer.md
+
+	# Write the markdown text inside the html folder
+	sed -i '/template/r buffer.md' $FILENAME.html
+
+	# Change the theme if given
+	if [[ ! -z "$THEME" ]];then
+		sed -i 's/night/'"$THEME"'/g' $FILENAME.html
+	fi
+
+	rm buffer.md
+
+	# Open the generated html file in firefox
+	firefox $FILENAME.html
+done

@@ -1,0 +1,7 @@
+#!/usr/bin/zsh
+
+for file in `find $1 | grep ".html"`;
+do
+    tidy -f /tmp/errorfile -m ${file}
+    rm /tmp/errorfile
+done

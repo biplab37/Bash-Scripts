@@ -1,0 +1,43 @@
+#!/usr/bin/zsh
+
+usage() {
+    echo "usage: $(basename "$0") This functions copies files smartly from sourcefolder to the targetfolder. It uses diff to watch changes in the files and change the files rather than overwriting. This makes it easier for git to track the files even when you copy a whole folder." 
+}
+
+sourcefolder=$1
+targetfolder=$2
+
+diff $sourcefolder $targetfolder > /tmp/difffile
+grep "Only in $targetfolder" > /tmp/deletedfiles
+grep "Only in $sourcefolder" > /tmp/newfiles
+grep "diff " /tmp/difffile > /tmp/changedfiles
+
+createdlines=`cat /tmp/newfiles`
+
+for line in $creadtedlines;
+do
+    stringarray=($(echo $line | tr " " "\n"))
+    cp "$sourcefolder/$stringarray[4]" "$targetfolder/$stringarray[4]"
+done
+
+deletedlines=`cat /tmp/newfiles`
+
+for line in $deletedlines;
+do
+    stringarray=($(echo $line | tr " " "\n"))
+    rm "$targetfolder/$stringarray[4]"
+done
+changedlines=`cat /tmp/changedfiles`
+
+for line in $changedlines;
+do
+    stringarray=($(echo $line | tr " " "\n"))
+    echo $stringarray
+    diff -e ${stringarray[3]} ${stringarray[2]} > /tmp/ed_script.txt
+    echo "w" >> /tmp/ed_script.txt
+    cat /tmp/ed_script.txt
+    ed - ${stringarray[3]} < /tmp/ed_script.txt
+    cat ${stringarray[3]}
+done
+
+rm /tmp/difffile /tmp/changedfiles /tmp/ed_script.txt /tmp/newfiles /tmp/deletedfiles

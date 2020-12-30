@@ -1,0 +1,47 @@
+#!/usr/bin/zsh
+set -eu
+
+
+readonly EX_USAGE=64
+readonly EX_NOINPUT=66
+	
+usage() {
+    echo "usage: $(basename "$0") This function creates a reveal.js slide from a makdown file and open it in firefox."
+}
+
+## IF the file doesnot exists
+if [ ! -f "$1" ]; then
+    echo "$(basename "$0"): $1: No such file"
+    exit $EX_NOINPUT
+fi
+
+## Help
+if [ "$1" = -h ] || [ "$1" = --help ]; then
+    usage
+    exit
+fi
+
+## If the number of arguments does not match
+if [ $# -ne 1 ]; then
+    usage
+    exit $EX_USAGE
+fi
+
+## This file creates a reveal.js slide from a makdown file.
+
+# Separate the name from the extension
+filename="${1%.*}"
+
+# Copy an existing template file to the current folder
+cp ~/.myfunctions/assets/markdown.html $filename.html
+
+# Remove the YAML front matter from the markdown file if it exists
+sed '1 { /^---/ { :a N; /\n---/! ba; d} }' $1 > buffer.md
+
+# Write the markdown text inside the html folder
+sed -i '/template/r buffer.md' $filename.html
+
+rm buffer.md
+
+# Open the generated html file in firefox
+firefox $filename.html

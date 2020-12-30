@@ -1,0 +1,29 @@
+#!/usr/bin/zsh
+
+set -eu
+
+
+readonly EX_USAGE=64
+readonly EX_INPUTEXIST=67
+
+usage() {
+    echo "usage: $(basename "$0") This functions converts the jupyter notebook to pdf and open it in okular" 
+}
+
+if [ $# -ne 1 ]; then
+    usage
+    exit $EX_USAGE
+fi
+
+if [ "$1" = -h ] || [ "$1" = --help ]; then
+    usage
+    exit
+fi
+
+if [ -f "$1.html" ]; then
+    echo "$(basename "$0"): $1: File already exists"
+    exit $EX_INPUTEXIST
+fi
+
+cp /media/biplab/e271932f-bbce-422e-967e-20895f7111c9/Code/reveal.js/reveal.js/myslides/first.html "$1.html"
+subl "$1.html"
