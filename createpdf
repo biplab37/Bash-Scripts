@@ -1,0 +1,40 @@
+#!/usr/bin/zsh
+
+set -eu
+
+usage() {
+    echo "Usage: createpdf  filenames \n  This function creates a pdf from a makdown files open it in okular."
+}
+
+if [ -z $* ]; then
+	echo "Please provide the markdown files you want to be converted to pdf"
+fi
+
+for file in $* ; do
+	# Separate the name from the extension
+	FILENAME=${file%.*}
+
+	pandoc -s $FILENAME.md -o $FILENAME.tex
+
+	sed -i -zE  's/\\\[\n[^\n]*\\begin\{align\}/\n\\begin\{align\}/g' $FILENAME.tex
+	sed -i -zE 's/\\end\{align\}\n[^\n]*\\\]/\\end\{align\}/g' $FILENAME.tex
+
+	sed -i -E 's/\\\[/\\begin\{equation\}/g' $FILENAME.tex
+	sed -i -E 's/\\\]/\\end\{equation\}/g' $FILENAME.tex
+
+	sed -i -zE 's/\\begin\{quote\}\n\\textbf\{([^\n]*)\}/\\begin\{mybox\}{\1}/g' $FILENAME.tex
+	sed -i -zE 's/\\begin\{quote\}/\\begin\{mybox\}{}/g' $FILENAME.tex
+
+	sed -i -E 's/\\end\{quote\}/\\end\{mybox\}/g' $FILENAME.tex
+
+	sed -i -E 's/\\\(\\ref(.*)\\\)/\\ref\1/g' $FILENAME.tex
+
+
+	# Change the theme if given
+	
+
+	pdflatex -interaction=batchmode $FILENAME.tex
+
+	# Open the generated html file in firefox
+	okular $FILENAME.pdf
+done

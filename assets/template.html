@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    $if(title)$
+    <title>$title$</title>
+    $endif$
+
+    <link rel="stylesheet" type="text/css"
+        href="/media/biplab/e271932f-bbce-422e-967e-20895f7111c9/Code/reveal.js/reveal.js/dist/mystyle.css">
+    <link rel="stylesheet"
+        href="/media/biplab/e271932f-bbce-422e-967e-20895f7111c9/Code/reveal.js/reveal.js/dist/reset.css">
+    <link rel="stylesheet"
+        href="/media/biplab/e271932f-bbce-422e-967e-20895f7111c9/Code/reveal.js/reveal.js/dist/reveal.css">
+    <link rel="stylesheet"
+        href="/media/biplab/e271932f-bbce-422e-967e-20895f7111c9/Code/reveal.js/reveal.js/dist/theme/simple.css"
+        id="theme">
+
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet"
+        href="/media/biplab/e271932f-bbce-422e-967e-20895f7111c9/Code/reveal.js/reveal.js/plugin/highlight/monokai.css"
+        id="highlight-theme">
+</head>
+
+<body>
+    <div class="reveal">
+        <div class="slides">
+$body$
+            </div>
+            </div>
+            
+            <script src="/media/biplab/e271932f-bbce-422e-967e-20895f7111c9/Code/reveal.js/reveal.js/dist/reveal.js"></script>
+            <script
+                src="/media/biplab/e271932f-bbce-422e-967e-20895f7111c9/Code/reveal.js/reveal.js/plugin/notes/notes.js"></script>
+            <script
+                src="/media/biplab/e271932f-bbce-422e-967e-20895f7111c9/Code/reveal.js/reveal.js/plugin/markdown/markdown.js"></script>
+            <script
+                src="/media/biplab/e271932f-bbce-422e-967e-20895f7111c9/Code/reveal.js/reveal.js/plugin/highlight/highlight.js"></script>
+            <script src="/media/biplab/e271932f-bbce-422e-967e-20895f7111c9/Code/reveal.js/reveal.js/plugin/math/math.js"></script>
+            <script>
+                // More info about initialization & config:
+                // - https://revealjs.com/initialization/
+                // - https://revealjs.com/config/
+                Reveal.initialize({
+                    // Parallax background image
+                    parallaxBackgroundImage: "/home/biplab/Pictures/backgrounds/pexels-olia-danilevich-5088017.jpg", // e.g. "https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg"
+
+                    // // Parallax background size
+                    parallaxBackgroundSize: '2000px 900px', // CSS syntax, e.g. "2100px 900px" - currently only pixels are supported (don't use % or auto)
+
+                    parallaxBackgroundVertical: 100,
+
+                    hash: true,
+
+                    // Learn about plugins: https://revealjs.com/plugins/
+                    plugins: [RevealMarkdown, RevealHighlight, RevealNotes, RevealMath]
+                });
+            </script>
+</body>
+            
+</html>

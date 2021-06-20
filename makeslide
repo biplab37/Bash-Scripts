@@ -44,4 +44,4 @@ sed -i '/template/r buffer.md' $filename.html
 rm buffer.md
 
 # Open the generated html file in firefox
-firefox $filename.html
+xdg-open $filename.html

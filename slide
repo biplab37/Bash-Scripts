@@ -3,10 +3,10 @@
 set -eu
 
 usage() {
-    echo "Usage: makeslide1 [-t THEME] [-h] [-o] filenames \n  This function creates a reveal.js slide from a makdown files and open it in firefox."
+    echo "Usage: slide [-t THEME] [-h] [-o] filenames \n  This function creates a reveal.js slide from a makdown files and open it in firefox."
 }
 
-THEME="white"
+THEME="simple"
 
 while getopts ":ht:o" opt; do
 	case "$opt" in
@@ -42,22 +42,13 @@ for file in $* ; do
 	# Separate the name from the extension
 	FILENAME=${file%.*}
 
-	# Copy an existing template file to the current folder
-	cp ~/.myfunctions/assets/markdown.html $FILENAME.html
-
-	# Remove the YAML front matter from the markdown file if it exists
-	sed '1 { /^---/ { :a N; /\n---/! ba; d} }' $FILENAME.md > buffer.md
-
-	# Write the markdown text inside the html folder
-	sed -i '/template/r buffer.md' $FILENAME.html
+	pandoc -s --template ~/.myfunctions/assets/template.html -i -t revealjs $FILENAME.md -o $FILENAME.html
 
 	# Change the theme if given
 	if [[ ! -z "$THEME" ]];then
-		sed -i 's/night/'"$THEME"'/g' $FILENAME.html
+		sed -i 's/simple/'"$THEME"'/g' $FILENAME.html
 	fi
 
-	rm buffer.md
-
 	# Open the generated html file in firefox
-	#firefox $FILENAME.html
+	firefox $FILENAME.html
 done

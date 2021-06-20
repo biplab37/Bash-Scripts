@@ -1,0 +1,44 @@
+#!/usr/bin/zsh
+
+set -eu
+
+usage() {
+    echo "Usage: slidev [-h] [-o] filenames \n  This function creates a slide from a makdown files and open it in default browser."
+}
+
+while getopts ":ho" opt; do
+	case "$opt" in
+		h)
+			usage
+			exit 1
+			;;
+		o) 
+			echo "Option for theme:"
+			echo " default\n seriph\n penguin\n apple-basic"
+			exit 1
+			;;
+		\?)
+			echo "invalid option: -$OPTARG"
+			exit 1
+			;;
+		:)
+			echo "Option -$OPTARG requires an argument."
+			exit 1
+			;;
+	esac
+done
+shift "(${OPTIND} - 1)"
+
+if [ -z $* ]; then
+	echo "Please provide the markdown files you want to be converted to sildes"
+fi
+
+for file in $* ; do
+	# Separate the name from the extension
+	FILENAME=`realpath $file`
+    cd ~/.slidev
+
+    npm run dev $FILENAME
+done
+
+cd -
